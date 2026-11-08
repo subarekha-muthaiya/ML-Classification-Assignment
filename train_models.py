@@ -1,6 +1,8 @@
 """
-ML Classification Models Training Script
+ML Classification Models Training Script - Assignment 2
 For Bakery Sales Dataset Classification
+Student ID: 2026AK05229
+BITS WILP M.Tech (AIML)
 
 This script trains 5 classification models and evaluates them using
 multiple metrics: Accuracy, Precision, Recall, F1, AUC, and MCC.

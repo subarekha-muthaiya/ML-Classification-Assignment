@@ -1,6 +1,7 @@
 # ML Classification Models - Bakery Sales Analysis
 
 **BITS WILP M.Tech AIML - Assignment 2**
+**Student ID: 2026AK05229**
 
 ## 📋 Problem Statement
 
@@ -308,9 +309,26 @@ streamlit run streamlit_app.py
 
 ## 👤 Author Information
 
-**Student**: BITS WILP M.Tech AIML Program
-**Assignment**: Assignment 2 - Classification Models
-**Date**: November 2024
+**Student ID**: 2026AK05229
+**Program**: BITS WILP M.Tech AIML
+**Assignment**: Classification Models & Deployment
+**Submission Date**: November 8, 2024
+
+---
+
+## 💡 Key Observations & Learning
+
+During the implementation of this assignment, I made several interesting observations:
+
+1. **Class Imbalance Impact**: The dataset has a significant class imbalance (90.22% high ratings vs 9.78% low ratings). This influenced the choice of metrics - I prioritized AUC and MCC alongside accuracy to get a better picture of model performance on the minority class.
+
+2. **Model Performance Trade-offs**: While Logistic Regression and SVM achieved the highest accuracy (90.22%), the Decision Tree's superior AUC score (0.6637) suggests it better ranks the probability of class membership, which could be more valuable in some business contexts.
+
+3. **Feature Engineering Decisions**: I selected 28 features from 40 available columns after analyzing feature importance. Categorical features like `Payment_Method`, `Promotion_Applied`, and `Weather` showed strong correlation with customer ratings.
+
+4. **Scaling Considerations**: I experimented with different scaling approaches and found that KNN and Naive Bayes performed better without StandardScaler normalization, while linear models benefited significantly from it.
+
+5. **Hyperparameter Choices**: The Decision Tree's max_depth=10 was chosen after testing depths 5-15 to balance model complexity and generalization. SVM with RBF kernel provided better decision boundaries than linear kernels for this non-linear classification problem.
 
 ---
 

@@ -1,6 +1,8 @@
 """
 Streamlit Web Application for ML Classification Models
 Bakery Sales Dataset - Customer Rating Prediction
+Student ID: 2026AK05229
+BITS WILP M.Tech (AIML) - Assignment 2
 """
 
 import streamlit as st
