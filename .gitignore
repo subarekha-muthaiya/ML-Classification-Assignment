@@ -50,10 +50,8 @@ venv/
 *.xlsx
 *.xls
 
-# Models (only .gitignore these if > 100MB)
-*.joblib
-*.pkl
-*.pickle
+# Models (tracked for deployment)
+# Note: Models are included in git for Streamlit Cloud deployment
 
 # Logs
 *.log

@@ -49,13 +49,15 @@ st.markdown("""
 def load_models_and_data():
     """Load all trained models and supporting files"""
     models = {}
-    model_dir = './models'
+    # Get the directory of the current script
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    model_dir = os.path.join(script_dir, 'models')
     
     # Load scaler
-    scaler = joblib.load(f'{model_dir}/scaler.joblib')
+    scaler = joblib.load(os.path.join(model_dir, 'scaler.joblib'))
     
     # Load feature columns
-    feature_cols = joblib.load(f'{model_dir}/feature_columns.joblib')
+    feature_cols = joblib.load(os.path.join(model_dir, 'feature_columns.joblib'))
     
     # Load models
     model_files = {
@@ -67,12 +69,12 @@ def load_models_and_data():
     }
     
     for model_name, filename in model_files.items():
-        model_path = f'{model_dir}/{filename}'
+        model_path = os.path.join(model_dir, filename)
         if os.path.exists(model_path):
             models[model_name] = joblib.load(model_path)
     
     # Load results
-    results_df = pd.read_csv(f'{model_dir}/model_results.csv', index_col=0)
+    results_df = pd.read_csv(os.path.join(model_dir, 'model_results.csv'), index_col=0)
     
     return models, scaler, feature_cols, results_df
 
@@ -87,9 +89,11 @@ except Exception as e:
 def load_test_data():
     """Load test data for demonstrations"""
     try:
-        test_df = pd.read_csv('../Assignment_2/bakery_sales_dataset.csv')
+        script_dir = os.path.dirname(os.path.abspath(__file__))
+        test_df = pd.read_csv(os.path.join(script_dir, 'test_data.csv'))
         return test_df.head(100)  # Return first 100 rows for demo
-    except:
+    except Exception as e:
+        st.warning(f"Could not load test data: {str(e)}")
         return None
 
 test_data = load_test_data()
