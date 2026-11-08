@@ -49,15 +49,37 @@ st.markdown("""
 def load_models_and_data():
     """Load all trained models and supporting files"""
     models = {}
-    # Get the directory of the current script
-    script_dir = os.path.dirname(os.path.abspath(__file__))
+    
+    # Robust path resolution for both local and Streamlit Cloud deployment
+    try:
+        # Try __file__ first (works locally)
+        script_dir = os.path.dirname(os.path.abspath(__file__))
+    except:
+        # Fallback for environments where __file__ is not available
+        script_dir = os.getcwd()
+    
     model_dir = os.path.join(script_dir, 'models')
     
+    # Verify model directory exists
+    if not os.path.exists(model_dir):
+        # Try alternative path (for Streamlit Cloud)
+        alt_model_dir = os.path.join(os.getcwd(), 'models')
+        if os.path.exists(alt_model_dir):
+            model_dir = alt_model_dir
+        else:
+            raise FileNotFoundError(f"Models directory not found at {model_dir} or {alt_model_dir}")
+    
     # Load scaler
-    scaler = joblib.load(os.path.join(model_dir, 'scaler.joblib'))
+    scaler_path = os.path.join(model_dir, 'scaler.joblib')
+    if not os.path.exists(scaler_path):
+        raise FileNotFoundError(f"Scaler file not found at {scaler_path}")
+    scaler = joblib.load(scaler_path)
     
     # Load feature columns
-    feature_cols = joblib.load(os.path.join(model_dir, 'feature_columns.joblib'))
+    feature_cols_path = os.path.join(model_dir, 'feature_columns.joblib')
+    if not os.path.exists(feature_cols_path):
+        raise FileNotFoundError(f"Feature columns file not found at {feature_cols_path}")
+    feature_cols = joblib.load(feature_cols_path)
     
     # Load models
     model_files = {
@@ -72,9 +94,14 @@ def load_models_and_data():
         model_path = os.path.join(model_dir, filename)
         if os.path.exists(model_path):
             models[model_name] = joblib.load(model_path)
+        else:
+            st.warning(f"⚠️ Model file not found: {filename}")
     
     # Load results
-    results_df = pd.read_csv(os.path.join(model_dir, 'model_results.csv'), index_col=0)
+    results_csv_path = os.path.join(model_dir, 'model_results.csv')
+    if not os.path.exists(results_csv_path):
+        raise FileNotFoundError(f"Results CSV not found at {results_csv_path}")
+    results_df = pd.read_csv(results_csv_path, index_col=0)
     
     return models, scaler, feature_cols, results_df
 
@@ -89,8 +116,25 @@ except Exception as e:
 def load_test_data():
     """Load test data for demonstrations"""
     try:
-        script_dir = os.path.dirname(os.path.abspath(__file__))
-        test_df = pd.read_csv(os.path.join(script_dir, 'test_data.csv'))
+        try:
+            # Try __file__ first (works locally)
+            script_dir = os.path.dirname(os.path.abspath(__file__))
+        except:
+            # Fallback for environments where __file__ is not available
+            script_dir = os.getcwd()
+        
+        test_csv_path = os.path.join(script_dir, 'test_data.csv')
+        
+        # Fallback if not found
+        if not os.path.exists(test_csv_path):
+            alt_test_csv_path = os.path.join(os.getcwd(), 'test_data.csv')
+            if os.path.exists(alt_test_csv_path):
+                test_csv_path = alt_test_csv_path
+            else:
+                st.warning(f"Test data CSV not found at {test_csv_path} or {alt_test_csv_path}")
+                return None
+        
+        test_df = pd.read_csv(test_csv_path)
         return test_df.head(100)  # Return first 100 rows for demo
     except Exception as e:
         st.warning(f"Could not load test data: {str(e)}")
